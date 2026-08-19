@@ -1,0 +1,27 @@
+# Python Virtual Environment
+venv/
+.venv/
+env/
+
+# IDE configurations
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# C/C++ debug symbols and compiled files (main.dSYM)
+main.dSYM/
+main.dsym/
+*.dSYM/
+*.o
+*.out
+
+# Exclude main.py as requested
+main.py
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
