@@ -2,9 +2,10 @@
 
 Welcome to the **Computational Linguistics and Natural Language Processing (NLP) Laboratory** repository. This repository is dedicated to exploring the core foundations of data analysis, exploratory data visualization, and fundamental text preprocessing pipelines in NLP. 
 
-The codebase is split into two primary laboratories:
+The codebase is split into three primary laboratories:
 1. **Lab 1**: Exploratory Data Analysis (EDA) and Visualization on Tabular Datasets.
 2. **LAB 2**: NLP Text Preprocessing, Word/Sentence Tokenization (using NLTK, spaCy, and Regex), and Stop Words Filtering.
+3. **Lab 3**: Stemming, Lemmatization, and Regular Expression Pattern Matching.
 
 ---
 
@@ -19,11 +20,13 @@ NLP Lab/
 ├── Lab1/
 │   ├── Lab1.ipynb               # Jupyter Notebook containing Experiments 1.1 to 1.10
 │   └── employee_information_100.csv # Raw employee database for analysis (100 rows)
-└── LAB2/
-    ├── Lab2.ipynb               # Jupyter Notebook containing Experiments 2.1 to 2.3
-    ├── 2.1_text_data.txt        # Input dataset for preprocessing
-    ├── 2.2_tokenization_data.txt# Input text dataset for word and sentence tokenization
-    └── 2.3_clean_data.txt       # Input text dataset for stop words removal
+├── LAB2/
+│   ├── Lab2.ipynb               # Jupyter Notebook containing Experiments 2.1 to 2.3
+│   ├── 2.1_text_data.txt        # Input dataset for preprocessing
+│   ├── 2.2_tokenization_data.txt# Input text dataset for word and sentence tokenization
+│   └── 2.3_clean_data.txt       # Input text dataset for stop words removal
+└── Lab3/
+    └── lab3.ipynb               # Jupyter Notebook containing Experiments 3.1 to 3.3
 ```
 
 ---
@@ -97,43 +100,33 @@ Stop words (e.g., "is", "the", "a", "an", "to") carry high frequency but low sem
 
 ---
 
-## 🛠️ Installation & Setup
+### 🧬 Lab 3: Stemming, Lemmatization & Regular Expressions
+This lab explores text normalization through stemming and lemmatization, along with pattern extraction using regular expressions. These techniques are essential for reducing vocabulary complexity and extracting structured information from unstructured text.
 
-Since virtual environments and project configs are gitignored, you can set up the environment manually using the following steps:
+#### 1. Experiment 3.1: Stemming using Porter Stemmer
+Stemming reduces words to their root form by stripping suffixes using heuristic rules. The Porter Stemmer is one of the most widely used stemming algorithms in information retrieval.
+*   **Input Words**: playing, played, plays, studies, studying, connected, connection, computers
+*   **Implementation**:
+    *   Uses NLTK's `PorterStemmer` to apply suffix-stripping rules.
+    *   Displays original words alongside their stemmed forms.
+*   **Key Insight**: Stemming is fast but may produce non-dictionary roots (e.g., "studies" → "studi").
 
-1.  **Create a virtual environment**:
-    ```bash
-    python3 -m venv venv
-    ```
+#### 2. Experiment 3.2: Lemmatization using WordNet Lemmatizer
+Lemmatization reduces words to their dictionary base form (lemma) using vocabulary analysis and morphological rules, requiring part-of-speech (POS) tagging for accuracy.
+*   **Input Words**: cats, dogs, running, runs, ran, studies, studying, better, children, mice, went, ate, leaves, caring
+*   **Implementation**:
+    *   Uses NLTK's `WordNetLemmatizer` with manually assigned POS tags (noun, verb, adjective).
+    *   Maps each word to its correct lemma (e.g., "mice" → "mouse", "better" → "good").
+*   **Key Insight**: Unlike stemming, lemmatization produces valid dictionary words and handles irregular forms (e.g., "went" → "go").
 
-2.  **Activate the virtual environment**:
-    *   **macOS / Linux**:
-        ```bash
-        source venv/bin/activate
-        ```
-    *   **Windows (Command Prompt)**:
-        ```cmd
-        venv\Scripts\activate
-        ```
-    *   **Windows (PowerShell)**:
-        ```powershell
-        .\venv\Scripts\Activate.ps1
-        ```
+#### 3. Experiment 3.3: Regex-Based Information Extraction
+Regular expressions provide a powerful pattern-matching mechanism for extracting structured data from unstructured text. This experiment extracts emails, URLs, mobile numbers, hashtags, and mentions.
+*   **Input Text**: A sample workshop announcement containing various contact and social media references.
+*   **Extraction Patterns**:
+    *   **Email Addresses**: Pattern matching `@` domain structures.
+    *   **URLs**: Detecting `http://`, `https://`, and `www.` prefixed links.
+    *   **Mobile Numbers**: Indian mobile number formats with optional country code (+91).
+    *   **Hashtags**: Words prefixed with `#` (e.g., #NLP, #Python).
+    *   **Mentions**: Usernames prefixed with `@` (e.g., @NLPWorkshop).
 
-3.  **Install Required Libraries**:
-    ```bash
-    pip install --upgrade pip
-    pip install pandas matplotlib nltk spacy jupyter
-    ```
-
-4.  **Download Language Models & NLP Corpora**:
-    Run a python shell or add cell executions to download NLTK data and spaCy model:
-    ```bash
-    python3 -c "import nltk; nltk.download('punkt'); nltk.download('stopwords')"
-    python3 -m spacy download en_core_web_sm
-    ```
-
-5.  **Launch Notebook**:
-    ```bash
-    jupyter notebook
-    ```
+---
