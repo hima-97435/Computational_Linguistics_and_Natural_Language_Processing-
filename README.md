@@ -2,10 +2,11 @@
 
 Welcome to the **Computational Linguistics and Natural Language Processing (NLP) Laboratory** repository. This repository is dedicated to exploring the core foundations of data analysis, exploratory data visualization, and fundamental text preprocessing pipelines in NLP. 
 
-The codebase is split into three primary laboratories:
+The codebase is split into four primary laboratories:
 1. **Lab 1**: Exploratory Data Analysis (EDA) and Visualization on Tabular Datasets.
 2. **LAB 2**: NLP Text Preprocessing, Word/Sentence Tokenization (using NLTK, spaCy, and Regex), and Stop Words Filtering.
 3. **Lab 3**: Stemming, Lemmatization, and Regular Expression Pattern Matching.
+4. **LAB 4**: Term Frequency Analysis, Named Entity Recognition (NER), and TF-IDF Implementation (With & Without NLP Toolkits).
 
 ---
 
@@ -25,8 +26,13 @@ NLP Lab/
 │   ├── 2.1_text_data.txt        # Input dataset for preprocessing
 │   ├── 2.2_tokenization_data.txt# Input text dataset for word and sentence tokenization
 │   └── 2.3_clean_data.txt       # Input text dataset for stop words removal
-└── Lab3/
-    └── lab3.ipynb               # Jupyter Notebook containing Experiments 3.1 to 3.3
+├── Lab3/
+│   └── lab3.ipynb               # Jupyter Notebook containing Experiments 3.1 to 3.3
+└── LAB-4/
+    ├── main.ipynb               # Jupyter Notebook containing Experiments 4.1 to 4.3
+    ├── 4.1_4.2_input.txt        # Input text dataset for Experiments 4.1 and 4.2
+    ├── term_frequency_toolkit.csv    # Term frequency output generated via NLTK
+    └── term_frequency_no_toolkit.csv # Term frequency output generated without toolkits
 ```
 
 ---
@@ -128,5 +134,46 @@ Regular expressions provide a powerful pattern-matching mechanism for extracting
     *   **Mobile Numbers**: Indian mobile number formats with optional country code (+91).
     *   **Hashtags**: Words prefixed with `#` (e.g., #NLP, #Python).
     *   **Mentions**: Usernames prefixed with `@` (e.g., @NLPWorkshop).
+
+---
+
+### 🏷️ LAB 4: Term Frequency, Named Entity Recognition (NER) & TF-IDF Analysis
+This lab focuses on lexical statistics, information extraction through named entities, and document-level weighting schemes. It compares library-driven pipelines (NLTK, spaCy) with custom algorithmic implementations from scratch, demonstrating how vocabulary statistics are computed and utilized in Natural Language Processing and Information Retrieval.
+
+#### 1. Experiment 4.1: Term-Frequency Analysis & Named Entity Recognition (NER) Using Toolkits
+*   **Objective**: Compute word frequency distributions and identify real-world entities in unstructured text using established NLP libraries (`NLTK`, `spaCy`).
+*   **Implementation**:
+    *   **Term Frequency Analysis**:
+        *   Tokenizes the input text (`4.1_4.2_input.txt`) using `nltk.word_tokenize`.
+        *   Filters out non-alphabetic tokens and normalizes words to lowercase.
+        *   Computes word frequencies using `collections.Counter`.
+        *   Saves the full frequency distribution to `term_frequency_toolkit.csv` (`Term, Frequency`).
+        *   Displays the top 10 most frequent terms and their counts.
+    *   **Named Entity Recognition (NER)**:
+        *   Processes the text using spaCy's pre-trained model (`en_core_web_sm`).
+        *   Identifies named entities and maps them to semantic categories such as `ORG` (Organizations), `GPE` (Geopolitical Entities), `PERSON`, `LANGUAGE`, `NORP`, `LOC`, and `DATE`.
+
+#### 2. Experiment 4.2: Term-Frequency Analysis Without NLP Toolkits
+*   **Objective**: Perform word frequency analysis from first principles without relying on NLTK, spaCy, or any external NLP toolkit.
+*   **Implementation**:
+    *   Reads and converts the text (`4.1_4.2_input.txt`) to lowercase.
+    *   Extracts word tokens manually using regular expressions (`re.findall(r'\b[a-z]+\b', text)`).
+    *   Maintains and calculates frequency counts using a native Python dictionary.
+    *   Sorts terms by frequency in descending order.
+    *   Saves the results to `term_frequency_no_toolkit.csv` (`Term, Frequency`).
+    *   Outputs the top 10 most frequent terms with their frequencies.
+
+#### 3. Experiment 4.3: TF-IDF Analysis Without NLP Toolkits
+*   **Objective**: Implement the full Term Frequency - Inverse Document Frequency (TF-IDF) scoring algorithm from mathematical scratch across multiple documents without external toolkits.
+*   **Workflow & Mathematical Formulation**:
+    1.  **Corpus Processing & Tokenization**: Ingests multiple text documents, converts text to lowercase, strips punctuation marks (`string.punctuation` via `str.maketrans`), and tokenizes documents into word lists.
+    2.  **Term Frequency (TF)**: Computes the normalized frequency of term $t$ in document $d$:
+        $$\text{TF}(t, d) = \frac{\text{count}(t, d)}{\text{total words in } d}$$
+    3.  **Document Frequency (DF)**: Computes the number of documents containing term $t$ across the corpus using set-based uniqueness.
+    4.  **Inverse Document Frequency (IDF)**: Calculates the logarithmic inverse frequency reflecting the specificity of each term across the collection ($N$ total documents):
+        $$\text{IDF}(t) = \log\left(\frac{N}{\text{DF}(t)}\right)$$
+    5.  **TF-IDF Weighting**: Computes the composite importance score for every term in each document:
+        $$\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \text{IDF}(t)$$
+    6.  **Tabular Reporting & Ranking**: Outputs structured tables showing `Term`, `TF`, `DF`, `IDF`, and `TF-IDF` values, and extracts the top 10 most characteristic terms per document based on their TF-IDF scores.
 
 ---
