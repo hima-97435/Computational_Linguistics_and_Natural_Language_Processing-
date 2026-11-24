@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -N ntl_lora_fp
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:ngpus=1:mem=64gb
+#PBS -l walltime=12:00:00
+# Fold 0 with stage 1 on the FULL Open Pool (231k rows), to compare against the 70k-row run.
+cd ~/ntl
+exec > logs/job_${PBS_JOBID%%.*}.log 2>&1
+export CUDA_MPS_PIPE_DIRECTORY=/tmp/nomps_$USER CUDA_MPS_LOG_DIRECTORY=/tmp/nomps_$USER; mkdir -p /tmp/nomps_$USER
+source ~/miniconda3/etc/profile.d/conda.sh; conda activate ~/ntl/env
+export TOKENIZERS_PARALLELISM=false HF_HUB_OFFLINE=1
+sleep 120  # if the other ntl job started at the same time on this node, let it claim its GPU first (PBS does not isolate GPUs)
+nvidia-smi --query-gpu=index,name,memory.used,memory.total --format=csv
+export CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits | sort -t, -k2 -n | head -1 | cut -d, -f1)
+echo "using GPU $CUDA_VISIBLE_DEVICES"
+python train_lora.py --fold 0 --pool_per_class 0 --tag _fullpool > logs/fold0_fullpool.log 2>&1
+echo JOB_DONE

@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N ntl_lora
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:ngpus=1:mem=64gb
+#PBS -l walltime=10:00:00
+# Runs the fold-0 validation model, then the full-train model, on one GPU (1-GPU requests backfill sooner).
+cd ~/ntl
+exec > logs/job_${PBS_JOBID%%.*}.log 2>&1
+export CUDA_MPS_PIPE_DIRECTORY=/tmp/nomps_$USER CUDA_MPS_LOG_DIRECTORY=/tmp/nomps_$USER; mkdir -p /tmp/nomps_$USER
+source ~/miniconda3/etc/profile.d/conda.sh; conda activate ~/ntl/env
+export TOKENIZERS_PARALLELISM=false HF_HUB_OFFLINE=1
+nvidia-smi --query-gpu=index,name,memory.used,memory.total --format=csv
+# PBS does not isolate GPUs: take the one with least memory in use
+export CUDA_VISIBLE_DEVICES=$(nvidia-smi --query-gpu=index,memory.used --format=csv,noheader,nounits | sort -t, -k2 -n | head -1 | cut -d, -f1)
+echo "using GPU $CUDA_VISIBLE_DEVICES"
+python train_lora.py --fold 0  > logs/fold0.log 2>&1
+python train_lora.py --fold -1 > logs/full.log 2>&1
+echo JOB_DONE
